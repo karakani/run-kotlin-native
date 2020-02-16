@@ -51,8 +51,7 @@ jobs:
 
     - name: create tarball
       run: |
-        tar cvzf binary-macosX64Binaries.tgz -C macosX64 .
-        tar cvzf binary-linuxX64Binaries.tgz -C linuxX64 .
+        tar cvzf release.tgz .
 
     - name: Create release
       id: create_release
@@ -65,21 +64,12 @@ jobs:
         draft: false
         prerelease: false
 
-    - name: Upload release assets (MacOS)
+    - name: Upload release assets
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: binary-macosX64Binaries.tgz
-        asset_name: binary-macosX64Binaries.tgz
-        asset_content_type: application/gzip
-    - name: Upload release assets (Linux)
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: binary-linuxX64Binaries.tgz
-        asset_name: binary-linuxX64Binaries.tgz
+        asset_path: release.tgz
+        asset_name: release.tgz
         asset_content_type: application/gzip
