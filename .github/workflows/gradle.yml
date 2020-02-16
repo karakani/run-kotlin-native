@@ -1,0 +1,33 @@
+name: Build binaries
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            task: linuxX64Binaries            
+          - os: macos-latest
+            task: macosX64Binaries
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build with Gradle
+      run: ./gradlew ${{ matrix.task }}
+
+    - name: Archive binaries
+      uses: actions/upload-artifact@v1
+      with:
+        name: binary(${{ matrix.task }})
+        path: build/bin
