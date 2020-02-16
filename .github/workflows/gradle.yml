@@ -31,15 +31,9 @@ jobs:
         name: binary(${{ matrix.task }})
         path: build/bin
 
-    - name: Download binaries
-      uses: actions/download-artifact@v1
-      if: startsWith(github.ref, 'refs/tags/v')
-      with:
-        name: binary(${{ matrix.task }})
-        path: binary-${{ matrix.task }}.zip
-
 
   publish:
+    needs: build
     runs-on: [ubuntu-latest]
     if: startsWith(github.ref, 'refs/tags/v')
 
