@@ -51,8 +51,8 @@ jobs:
 
     - name: create tarball
       run: |
-        tar cvzf binary-macosX64Binaries.tgz -C binary-macosX64Binaries/build .
-        tar cvzf binary-linuxX64Binaries.tgz -C binary-linuxX64Binaries/build .
+        tar cvzf binary-macosX64Binaries.tgz -C macosX64 .
+        tar cvzf binary-linuxX64Binaries.tgz -C linuxX64 .
 
     - name: Create release
       id: create_release
