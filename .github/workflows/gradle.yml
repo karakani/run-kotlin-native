@@ -1,4 +1,4 @@
-name: Java CI
+name: Build binaries
 
 on: [push]
 
@@ -25,3 +25,9 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew ${{ matrix.task }}
+
+    - name: Archive binaries
+      uses: actions/upload-artifact@v1
+      with:
+        name: binary(${{ matrix.task }})
+        path: build/bin
