@@ -31,3 +31,31 @@ jobs:
       with:
         name: binary(${{ matrix.task }})
         path: build/bin
+
+    - name: Download binaries
+      uses: actions/download-artifact@v1
+      if: startsWith(github.ref, 'refs/tags/v')
+      with:
+        name: binary(${{ matrix.task }})
+        path: binary-${{ matrix.task }}.zip
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      if: startsWith(github.ref, 'refs/tags/v')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+    - name: Upload release assets
+      uses: actions/upload-release-asset@v1
+      if: startsWith(github.ref, 'refs/tags/v')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: binary-${{ matrix.task }}.zip
+        asset_name: binary-${{ matrix.task }}.zip
+        asset_content_type: application/zip
