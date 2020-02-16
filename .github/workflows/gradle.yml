@@ -4,7 +4,6 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -31,3 +30,56 @@ jobs:
       with:
         name: binary(${{ matrix.task }})
         path: build/bin
+
+
+  publish:
+    needs: build
+    runs-on: [ubuntu-latest]
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+    - name: Download binaries (MacOS)
+      uses: actions/download-artifact@v1
+      with:
+        name: binary(macosX64Binaries)
+        path: binary-macosX64Binaries.zip
+    - name: Download binaries (Linux)
+      uses: actions/download-artifact@v1
+      with:
+        name: binary(linuxX64Binaries)
+        path: binary-linuxX64Binaries.zip
+
+    - name: create tarball
+      run: |
+        tar cvzf binary-macosX64Binaries.tgz -C binary-macosX64Binaries.zip .
+        tar cvzf binary-linuxX64Binaries.tgz -C binary-linuxX64Binaries.zip .
+
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+    - name: Upload release assets (MacOS)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: binary-macosX64Binaries.tgz
+        asset_name: binary-macosX64Binaries.tgz
+        asset_content_type: application/gzip
+    - name: Upload release assets (Linux)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: binary-linuxX64Binaries.tgz
+        asset_name: binary-linuxX64Binaries.tgz
+        asset_content_type: application/gzip
