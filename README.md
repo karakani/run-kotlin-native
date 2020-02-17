@@ -1,5 +1,7 @@
 # run-kotlin-native
 
+![Build binaries](https://github.com/karakani/run-kotlin-native/workflows/Build%20binaries/badge.svg)
+
 ## How to build
 
 ```shell script
