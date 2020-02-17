@@ -20,7 +20,7 @@ jobs:
     - uses: actions/cache@v1
       id:   cache
       with:
-        path: ~/.konan/caches
+        path: ~/.konan/cache
         key:  ${{ runner.os }}-konan-
         restore-keys: |
           ${{ runner.os }}-konan-
