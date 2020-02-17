@@ -38,7 +38,6 @@ jobs:
         name: binary(${{ matrix.task }})
         path: build/bin
 
-
   publish:
     needs: build
     runs-on: [ubuntu-latest]
