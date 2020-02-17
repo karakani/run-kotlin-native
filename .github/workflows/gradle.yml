@@ -51,6 +51,7 @@ jobs:
 
     - name: create tarball
       run: |
+        find binary-{macosX64,linuxX64}Binaries -type f -exec chmod +x {} \;
         tar cvzf binary-macosX64.tgz -C binary-macosX64Binaries .
         tar cvzf binary-linuxX64.tgz -C binary-linuxX64Binaries .
 
