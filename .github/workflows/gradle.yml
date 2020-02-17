@@ -10,7 +10,7 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         include:
           - os: ubuntu-latest
-            task: linuxX64Binaries            
+            task: linuxX64Binaries
           - os: macos-latest
             task: macosX64Binaries
 
@@ -42,17 +42,17 @@ jobs:
       uses: actions/download-artifact@v1
       with:
         name: binary(macosX64Binaries)
-        path: binary-macosX64Binaries.zip
+        path: binary-macosX64Binaries
     - name: Download binaries (Linux)
       uses: actions/download-artifact@v1
       with:
         name: binary(linuxX64Binaries)
-        path: binary-linuxX64Binaries.zip
+        path: binary-linuxX64Binaries
 
     - name: create tarball
       run: |
-        tar cvzf binary-macosX64Binaries.tgz -C binary-macosX64Binaries.zip .
-        tar cvzf binary-linuxX64Binaries.tgz -C binary-linuxX64Binaries.zip .
+        tar cvzf binary-macosX64.tgz -C binary-macosX64Binaries .
+        tar cvzf binary-linuxX64.tgz -C binary-linuxX64Binaries .
 
     - name: Create release
       id: create_release
@@ -71,8 +71,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: binary-macosX64Binaries.tgz
-        asset_name: binary-macosX64Binaries.tgz
+        asset_path: binary-macosX64.tgz
+        asset_name: binary-macosX64.tgz
         asset_content_type: application/gzip
     - name: Upload release assets (Linux)
       uses: actions/upload-release-asset@v1
@@ -80,6 +80,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: binary-linuxX64Binaries.tgz
-        asset_name: binary-linuxX64Binaries.tgz
+        asset_path: binary-linuxX64.tgz
+        asset_name: binary-linuxX64.tgz
         asset_content_type: application/gzip
